@@ -1,12 +1,23 @@
 document.addEventListener("DOMContentLoaded", () => {
+  let allData = { faculties: [] };
+
   fetch("data/lecturers.json")
-    .then((res) => res.json())
+    .then((res) => {
+        if (!res.ok) {
+            throw new Error(`HTTP error! status: ${res.status}`);
+        }
+        return res.json();
+    })
     .then((data) => {
+      allData = data;
       renderLecturers(data.faculties);
+    })
+    .catch((error) => {
+        console.error("Error loading data:", error);
     });
 
   const searchBar = document.getElementById("searchBar");
-  searchBar.addEventListener("input", handleSearch);
+  searchBar.addEventListener("input", (e) => handleSearch(e, allData));
 });
 
 function renderLecturers(faculties) {
@@ -51,25 +62,22 @@ function getAverageRating(reviews) {
   return (total / reviews.length).toFixed(1);
 }
 
-function handleSearch(e) {
+function handleSearch(e, data) {
   const query = e.target.value.toLowerCase();
-  fetch("data/lecturers.json")
-    .then((res) => res.json())
-    .then((data) => {
-      const filtered = data.faculties
-        .map((faculty) => {
-          return {
-            ...faculty,
-            lecturers: faculty.lecturers.filter(
-              (l) =>
-                l.name.toLowerCase().includes(query) ||
-                faculty.name.toLowerCase().includes(query) ||
-                l.courses.some((c) => c.toLowerCase().includes(query))
-            ),
-          };
-        })
-        .filter((f) => f.lecturers.length > 0);
 
-      renderLecturers(filtered);
-    });
+  const filtered = data.faculties
+    .map((faculty) => {
+      return {
+        ...faculty,
+        lecturers: faculty.lecturers.filter(
+          (l) =>
+            l.name.toLowerCase().includes(query) ||
+            faculty.name.toLowerCase().includes(query) ||
+            l.courses.some((c) => c.toLowerCase().includes(query))
+        ),
+      };
+    })
+    .filter((f) => f.lecturers.length > 0);
+
+  renderLecturers(filtered);
 }
