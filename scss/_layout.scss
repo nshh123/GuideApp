@@ -4,29 +4,47 @@ body {
   font-family: $font-stack;
   margin: 0;
   padding: 0;
-  background: #f8f9fa;
+  background: $background-color;
   color: $text-color;
+  line-height: 1.6;
 }
 
 header {
   background: $primary-color;
-  padding: 1rem;
+  padding: 2.5rem 1rem;
   text-align: center;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
 
   h1 {
     margin: 0;
-    color: white;
+    color: $white;
+    font-size: 2.5rem;
+    font-weight: 800;
+    letter-spacing: -1px;
   }
 
   input {
-    margin-top: 0.5rem;
-    padding: 0.5rem;
-    width: 60%;
-    border-radius: 5px;
+    margin-top: 1.5rem;
+    padding: 1rem 1.5rem;
+    width: 90%;
+    max-width: 600px;
+    border-radius: 50px;
     border: none;
+    font-size: 1.1rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+    transition: transform 0.2s, box-shadow 0.2s;
+
+    &:focus {
+      outline: none;
+      transform: scale(1.02);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+    }
   }
 }
 
 main {
-  padding: 1rem;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 1rem 3rem;
 }
