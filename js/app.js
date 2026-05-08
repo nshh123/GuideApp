@@ -1,8 +1,11 @@
 let appState = [];
 let currentLecturerId = null;
 
+const APP_VERSION = "2.0";
+
 document.addEventListener("DOMContentLoaded", () => {
   initApp();
+  // ... rest of event listeners ...
 
   const searchBar = document.getElementById("searchBar");
   searchBar.addEventListener("input", handleSearch);
@@ -44,8 +47,10 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 async function initApp() {
+  const savedVersion = localStorage.getItem("guide_app_version");
   const savedData = localStorage.getItem("guide_app_data");
-  if (savedData) {
+
+  if (savedData && savedVersion === APP_VERSION) {
     appState = JSON.parse(savedData);
     renderLecturers(appState);
   } else {
@@ -63,6 +68,7 @@ async function initApp() {
 
 function saveState() {
   localStorage.setItem("guide_app_data", JSON.stringify(appState));
+  localStorage.setItem("guide_app_version", APP_VERSION);
 }
 
 function getStarRating(rating) {
@@ -80,47 +86,55 @@ function renderLecturers(faculties) {
   }
 
   faculties.forEach((faculty) => {
-    const facultyDiv = document.createElement("div");
-    facultyDiv.classList.add("faculty");
+    const facultySection = document.createElement("section");
+    facultySection.classList.add("faculty");
 
     const title = document.createElement("h2");
     title.textContent = faculty.name;
-    facultyDiv.appendChild(title);
+    facultySection.appendChild(title);
+
+    const grid = document.createElement("div");
+    grid.classList.add("lecturer-grid");
 
     faculty.lecturers.forEach((lecturer) => {
-      const lecturerDiv = document.createElement("div");
-      lecturerDiv.classList.add("lecturer");
+      const lecturerCard = document.createElement("div");
+      lecturerCard.classList.add("lecturer-card");
 
       const avg = getAverageRating(lecturer.reviews);
       const starDisplay = typeof avg === "number" ? getStarRating(avg) : avg;
 
-      lecturerDiv.innerHTML = `
-        <div class="lecturer-header">
-          <h3>${lecturer.name}</h3>
-          <button class="btn-add-review" onclick="openModal(${lecturer.id})">Add Review</button>
+      lecturerCard.innerHTML = `
+        <div class="card-header">
+          <img src="${lecturer.image}" alt="${lecturer.name}" class="profile-pic">
+          <div class="header-info">
+            <h3>${lecturer.name}</h3>
+            <p class="courses">${lecturer.courses.join(", ")}</p>
+          </div>
         </div>
-        <p><strong>Courses:</strong> ${lecturer.courses.join(", ")}</p>
-        <p class="rating-display"><strong>Average Rating:</strong> <span class="stars">${starDisplay}</span> ${
-        typeof avg === "number" ? `(${avg})` : ""
-      }</p>
-        <div class="reviews">
-          ${lecturer.reviews
-            .map(
-              (r) => `
-            <div class="review-item">
-              <span class="stars">${getStarRating(r.rating)}</span>
-              <p>"${r.comment}" - <strong>${r.student}</strong></p>
-            </div>
-          `
-            )
-            .join("")}
+        
+        <div class="card-body">
+          <div class="rating-box">
+             <span class="stars">${starDisplay}</span>
+             <span class="rating-num">${typeof avg === "number" ? avg : ""}</span>
+          </div>
+          
+          <div class="reviews-preview">
+            ${lecturer.reviews.length > 0 
+              ? `<p class="latest-review">"${lecturer.reviews[lecturer.reviews.length - 1].comment.substring(0, 60)}..."</p>`
+              : '<p class="no-reviews">No reviews yet. Be the first!</p>'}
+          </div>
+        </div>
+
+        <div class="card-footer">
+          <button class="btn-add-review" onclick="openModal(${lecturer.id})">Review Lecturer</button>
         </div>
       `;
 
-      facultyDiv.appendChild(lecturerDiv);
+      grid.appendChild(lecturerCard);
     });
 
-    container.appendChild(facultyDiv);
+    facultySection.appendChild(grid);
+    container.appendChild(facultySection);
   });
 }
 

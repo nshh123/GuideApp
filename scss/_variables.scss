@@ -1,9 +1,18 @@
-$primary-color: #2a9d8f;
-$secondary-color: #264653;
-$accent-color: #e76f51;
-$text-color: #264653;
-$light-text: #666;
-$font-stack: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-$background-color: #f0f2f5;
+// Colors
+$primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+$secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+$accent-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+
+$text-color: #1a1a2e;
+$light-text: #4a4a6a;
 $white: #ffffff;
-$star-color: #f4a261;
+$star-color: #ffbe0b;
+
+// Glassmorphism
+$glass-bg: rgba(255, 255, 255, 0.45);
+$glass-border: rgba(255, 255, 255, 0.18);
+$glass-blur: blur(12px);
+$glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+
+// Typography
+$font-stack: 'Poppins', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
